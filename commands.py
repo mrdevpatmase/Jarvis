@@ -1,4 +1,5 @@
 import webbrowser
+import os
 from datetime import datetime
 from speech_text_transform import speech_to_text, text_to_speech
 import spacy
@@ -14,6 +15,9 @@ intents = {
     "get_time": ["time please", "what's the time", "current time", "tell me the time"],
     "search_google": ["search google", "look up", "find on google", "google"],
     "search_youtube": ["play on youtube", "search youtube", "youtube video", "youtube"],
+    "open_notepad": ["open notepad", "start notepad", "launch notepad"],
+    "open_calculator": ["open calculator", "start calculator", "launch calculator"],
+    "open_whatsapp": ["open whatsapp", "start whatsapp", "launch whatsapp"],
     "exit": ["quit", "exit", "close", "stop"]
 }
 
@@ -21,6 +25,7 @@ intents = {
 for intent, phrases in intents.items():
     patterns = [nlp(text) for text in phrases]
     matcher.add(intent, patterns)
+
 
 while True:
     command = speech_to_text()
@@ -56,6 +61,18 @@ while True:
             text_to_speech(f"Here are the results for {search}")
         else:
             text_to_speech("What should I search on YouTube?")
+
+    elif intent_name == "open_notepad":
+        os.system("notepad.exe")
+        text_to_speech("Opening Notepad")
+
+    elif intent_name == "open_calculator":
+        os.system("calc.exe")
+        text_to_speech("Opening Calculator")
+
+    elif intent_name == "open_whatsapp":
+        webbrowser.open("https://web.whatsapp.com/")
+        text_to_speech("Opening WhatsApp Web")
 
     elif intent_name == "exit":
         text_to_speech("Goodbye!")
