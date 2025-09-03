@@ -11,6 +11,14 @@ Time check,get_time
 Show me the current time,get_time
 I want to know the time,get_time
 Give me the time now,get_time
+Tell me the exact time,get_time
+Please check the time,get_time
+Read the current time,get_time
+Show me what time it is,get_time
+Clock time please,get_time
+Tell me the present time,get_time
+What does the clock say?,get_time
+I need the time right now,get_time
 Search Google for Python tutorials,search_google
 Look up machine learning,search_google
 Find AI articles on Google,search_google
@@ -23,6 +31,14 @@ Search for stock prices on Google,search_google
 Find nearby cafes,search_google
 Google news about technology,search_google
 Search Google for recipes,search_google
+Find images on Google,search_google
+Search Google for sports updates,search_google
+Look up programming blogs,search_google
+Google latest movies,search_google
+Search Google for maps,search_google
+Find nearby hospitals on Google,search_google
+Google the meaning of AI,search_google
+Look up coding resources,search_google
 Play music on YouTube,search_youtube
 Search YouTube for cat videos,search_youtube
 Find Python tutorials on YouTube,search_youtube
@@ -35,6 +51,14 @@ Search YouTube for workout videos,search_youtube
 Play piano tutorials on YouTube,search_youtube
 Look up movie trailers on YouTube,search_youtube
 Search YouTube for meditation videos,search_youtube
+Show YouTube comedy clips,search_youtube
+Find news channels on YouTube,search_youtube
+Search for educational videos on YouTube,search_youtube
+Play YouTube shorts,search_youtube
+Find football highlights on YouTube,search_youtube
+Show me YouTube podcasts,search_youtube
+Look for travel vlogs on YouTube,search_youtube
+Search YouTube for interview videos,search_youtube
 Open Notepad,open_notepad
 Start Notepad,open_notepad
 Launch Notepad,open_notepad
@@ -47,6 +71,14 @@ Start a Notepad session,open_notepad
 Open Notepad editor,open_notepad
 Notepad text editor,open_notepad
 Open Notepad program,open_notepad
+Create a Notepad document,open_notepad
+Open blank Notepad,open_notepad
+Start writing in Notepad,open_notepad
+New Notepad window,open_notepad
+Run Notepad,open_notepad
+Open Notepad software,open_notepad
+Activate Notepad,open_notepad
+Notepad application open,open_notepad
 Open Calculator,open_calculator
 Launch Calculator,open_calculator
 Start Calculator,open_calculator
@@ -59,6 +91,14 @@ Calculator program,open_calculator
 Launch the Calculator tool,open_calculator
 Open my Calculator,open_calculator
 Use Calculator,open_calculator
+Bring up Calculator,open_calculator
+Open Calculator window,open_calculator
+Run Calculator,open_calculator
+Calculator software please,open_calculator
+I need a Calculator,open_calculator
+Activate Calculator,open_calculator
+Calculator tool open,open_calculator
+Start calculation app,open_calculator
 Open WhatsApp,open_whatsapp
 Launch WhatsApp,open_whatsapp
 Start WhatsApp,open_whatsapp
@@ -71,6 +111,14 @@ Launch WhatsApp program,open_whatsapp
 Open my WhatsApp,open_whatsapp
 Open WhatsApp chat,open_whatsapp
 Start WhatsApp messenger,open_whatsapp
+Open WhatsApp window,open_whatsapp
+Run WhatsApp,open_whatsapp
+Check WhatsApp messages,open_whatsapp
+Activate WhatsApp,open_whatsapp
+WhatsApp application open,open_whatsapp
+Bring up WhatsApp,open_whatsapp
+Start WhatsApp session,open_whatsapp
+Access WhatsApp,open_whatsapp
 Open LinkedIn,open_linkedin
 Launch LinkedIn,open_linkedin
 Start LinkedIn,open_linkedin
@@ -83,6 +131,14 @@ Open my LinkedIn profile,open_linkedin
 Launch LinkedIn program,open_linkedin
 Check LinkedIn updates,open_linkedin
 Open LinkedIn page,open_linkedin
+Access LinkedIn site,open_linkedin
+Open LinkedIn portal,open_linkedin
+Show LinkedIn profile,open_linkedin
+Open LinkedIn network,open_linkedin
+Go to LinkedIn,open_linkedin
+Open LinkedIn account,open_linkedin
+Bring up LinkedIn,open_linkedin
+Run LinkedIn application,open_linkedin
 Open GitHub,open_github
 Launch GitHub,open_github
 Start GitHub,open_github
@@ -95,6 +151,14 @@ Open my GitHub profile,open_github
 Launch GitHub program,open_github
 Check GitHub updates,open_github
 Open GitHub page,open_github
+Access GitHub website,open_github
+Open GitHub account,open_github
+Show GitHub repositories,open_github
+Run GitHub,open_github
+GitHub application open,open_github
+Check my GitHub projects,open_github
+Go to GitHub site,open_github
+Open GitHub dashboard,open_github
 Open Spotify,open_spotify
 Launch Spotify,open_spotify
 Start Spotify,open_spotify
@@ -107,3 +171,11 @@ Open my Spotify playlists,open_spotify
 Launch Spotify program,open_spotify
 Play songs on Spotify,open_spotify
 Open Spotify music,open_spotify
+Run Spotify,open_spotify
+Spotify application open,open_spotify
+Bring up Spotify,open_spotify
+Open Spotify window,open_spotify
+Play Spotify album,open_spotify
+Activate Spotify,open_spotify
+Spotify software open,open_spotify
+Start Spotify session,open_spotify
