@@ -1,7 +1,5 @@
 fastapi
 uvicorn
 joblib
-pydub
-SpeechRecognition
+scikit-learn
 numpy
-gtts
