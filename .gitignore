@@ -26,3 +26,11 @@ Thumbs.db
 *.tmp
 *.temp
 sample.txt
+.venv/
+.pkl
+
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+training/

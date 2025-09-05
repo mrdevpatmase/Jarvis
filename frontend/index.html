@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jarvis Web Assistant</title>
+  <style>
+    body {
+      font-family: "Google Sans", Arial, sans-serif;
+      background-color: #e8eaed; /* Full gray background */
+      color: #202124;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      color: #4285F4;
+    }
+    button {
+      background-color: #4285F4;
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
+    button:hover {
+      background-color: #3367d6;
+      transform: scale(1.05);
+    }
+    button:disabled {
+      background-color: #dadce0;
+      cursor: not-allowed;
+    }
+    #status {
+      font-size: 18px;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #dadce0; /* Proper gray instead of white */
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      min-height: 24px;
+      box-shadow: none; /* Remove shadow for flatter look */
+    }
+    .btn-container {
+      display: flex;
+      gap: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jarvis Web Assistant</h1>
+  <div class="btn-container">
+    <button id="activateBtn">Activate Jarvis</button>
+    <button id="stopBtn" disabled style="background-color:#EA4335;">Stop Jarvis</button>
+  </div>
+  <p id="status">Press "Activate Jarvis" to start.</p>
+
+  <script>
+    const btn = document.getElementById('activateBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const status = document.getElementById('status');
+
+    let recognition;
+    let listening = false;
+    let stopRequested = false;
+
+    function startListening() {
+      if (listening) return; 
+      listening = true;
+
+      recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+
+      recognition.onresult = async (event) => {
+        const command = event.results[0][0].transcript;
+        status.innerText = `You said: "${command}"`;
+
+        try {
+          const res = await fetch('/process_command', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ command })
+          });
+          const data = await res.json();
+          speakResponse(data.response);
+        } catch (err) {
+          status.innerText = "Error processing command";
+        }
+      };
+
+      recognition.onerror = (event) => {
+        status.innerText = "Error with microphone: " + event.error;
+        listening = false;
+      };
+
+      recognition.onend = () => {
+        listening = false;
+        if (!stopRequested) startListening();
+      };
+    }
+
+    btn.addEventListener('click', () => {
+      stopRequested = false;
+      btn.disabled = true;
+      stopBtn.disabled = false;
+      status.innerText = "Listening...";
+      startListening();
+    });
+
+    stopBtn.addEventListener('click', () => {
+      stopRequested = true;
+      if (recognition) recognition.stop();
+      btn.disabled = false;
+      stopBtn.disabled = true;
+      status.innerText = "Jarvis stopped.";
+    });
+
+    function speakResponse(text) {
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(text);
+      synth.speak(utterance);
+    }
+  </script>
+</body>
+</html>
