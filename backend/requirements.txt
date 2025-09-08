@@ -6,3 +6,4 @@ python-multipart==0.0.9
 flask
 gunicorn
 requests
+numpy==2.3.2
