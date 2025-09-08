@@ -1,137 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Jarvis Web Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {
-      font-family: "Google Sans", Arial, sans-serif;
-      background-color: #e8eaed; /* Full gray background */
-      color: #202124;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      margin-bottom: 20px;
-      font-size: 2.5rem;
-      color: #4285F4;
-    }
-    button {
-      background-color: #4285F4;
-      color: #fff;
-      border: none;
-      padding: 15px 30px;
-      font-size: 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin: 10px;
-      transition: background 0.3s ease, transform 0.1s ease;
-    }
-    button:hover {
-      background-color: #3367d6;
-      transform: scale(1.05);
-    }
-    button:disabled {
-      background-color: #dadce0;
-      cursor: not-allowed;
-    }
-    #status {
-      font-size: 18px;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #dadce0; /* Proper gray instead of white */
-      border: 1px solid #c0c0c0;
-      border-radius: 8px;
-      min-height: 24px;
-      box-shadow: none; /* Remove shadow for flatter look */
-    }
-    .btn-container {
-      display: flex;
-      gap: 15px;
-    }
+    body { font-family: "Google Sans", Arial, sans-serif; background:#e8eaed; color:#202124; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; margin:0; }
+    h1 { margin-bottom: 20px; font-size: 2.2rem; color:#4285F4; }
+    button { background:#4285F4; color:#fff; border:none; padding:14px 24px; font-size:16px; border-radius:10px; cursor:pointer; margin:8px; transition:background .2s, transform .1s; }
+    button:hover { background:#3367d6; transform:scale(1.03); }
+    button:disabled { background:#dadce0; cursor:not-allowed; }
+    #stopBtn { background:#EA4335; }
+    #status { font-size:16px; margin-top:16px; padding:10px 16px; background:#dadce0; border:1px solid #c0c0c0; border-radius:8px; min-height:24px; }
+    .btn-container { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
   </style>
 </head>
 <body>
   <h1>Jarvis Web Assistant</h1>
   <div class="btn-container">
     <button id="activateBtn">Activate Jarvis</button>
-    <button id="stopBtn" disabled style="background-color:#EA4335;">Stop Jarvis</button>
+    <button id="stopBtn" disabled>Stop Jarvis</button>
   </div>
   <p id="status">Press "Activate Jarvis" to start.</p>
 
   <script>
-    const btn = document.getElementById('activateBtn');
+    const activateBtn = document.getElementById('activateBtn');
     const stopBtn = document.getElementById('stopBtn');
-    const status = document.getElementById('status');
+    const statusEl = document.getElementById('status');
 
-    let recognition;
+    let recognition = null;
     let listening = false;
     let stopRequested = false;
 
+    function speak(text) {
+      const synth = window.speechSynthesis;
+      const u = new SpeechSynthesisUtterance(text);
+      synth.speak(u);
+    }
+
+    async function sendCommand(command) {
+      const res = await fetch('/process_command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command })
+      });
+      if (!res.ok) throw new Error('API error');
+      return res.json();
+    }
+
+    function handleAction(action) {
+      if (!action || !action.type) return;
+      if (action.type === 'say') {
+        speak(action.text || 'Okay');
+        statusEl.innerText = action.text || 'Spoken.';
+      } else if (action.type === 'open_url' && action.url) {
+        window.open(action.url, '_blank');
+        statusEl.innerText = `Opening: ${action.url}`;
+      } else {
+        statusEl.innerText = 'Unknown action.';
+      }
+    }
+
     function startListening() {
-      if (listening) return; 
+      if (listening) return;
       listening = true;
 
-      recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        statusEl.innerText = 'SpeechRecognition not supported in this browser.';
+        return;
+      }
+      recognition = new SR();
       recognition.lang = 'en-US';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
 
       recognition.start();
+      statusEl.innerText = 'Listening...';
 
-      recognition.onresult = async (event) => {
-        const command = event.results[0][0].transcript;
-        status.innerText = `You said: "${command}"`;
-
+      recognition.onresult = async (e) => {
+        const command = e.results[0][0].transcript;
+        statusEl.innerText = `You said: "${command}"`;
         try {
-          const res = await fetch('/process_command', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ command })
-          });
-          const data = await res.json();
-          speakResponse(data.response);
+          const data = await sendCommand(command);
+          handleAction(data.action);
         } catch (err) {
-          status.innerText = "Error processing command";
+          statusEl.innerText = 'Error processing command.';
         }
       };
 
-      recognition.onerror = (event) => {
-        status.innerText = "Error with microphone: " + event.error;
+      recognition.onerror = (e) => {
+        statusEl.innerText = 'Microphone error: ' + e.error;
         listening = false;
       };
 
       recognition.onend = () => {
         listening = false;
-        if (!stopRequested) startListening();
+        if (!stopRequested) startListening(); // continuous
       };
     }
 
-    btn.addEventListener('click', () => {
+    activateBtn.addEventListener('click', () => {
       stopRequested = false;
-      btn.disabled = true;
+      activateBtn.disabled = true;
       stopBtn.disabled = false;
-      status.innerText = "Listening...";
       startListening();
     });
 
     stopBtn.addEventListener('click', () => {
       stopRequested = true;
       if (recognition) recognition.stop();
-      btn.disabled = false;
+      activateBtn.disabled = false;
       stopBtn.disabled = true;
-      status.innerText = "Jarvis stopped.";
+      statusEl.innerText = 'Jarvis stopped.';
     });
-
-    function speakResponse(text) {
-      const synth = window.speechSynthesis;
-      const utterance = new SpeechSynthesisUtterance(text);
-      synth.speak(utterance);
-    }
   </script>
 </body>
 </html>

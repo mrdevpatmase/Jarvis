@@ -34,3 +34,6 @@ __pycache__/
 *.pyo
 .venv/
 training/
+
+app.py
+jarvis_logic.py
